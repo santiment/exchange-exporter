@@ -47,6 +47,7 @@ async function main() {
   fetch_trades(new ccxt.kraken({ 'enableRateLimit': true }))
   fetch_trades(new ccxt.bitfinex2({ 'enableRateLimit': true, 'rateLimit': 5000 }))
   fetch_trades(new ccxt.bittrex({ 'enableRateLimit': true }))
+  fetch_trades(new ccxt.poloniex({ 'enableRateLimit': true }))
 }
 
 main()

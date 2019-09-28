@@ -11,6 +11,8 @@ async function fetch_markets(exchange, order_book_limit = undefined) {
     console.log(`${exchange.name} - getting order books for ${exchange.symbols.length} markets`)
 
     for (ticker in currentTickers) {
+      if (!currentTickers[ticker]) continue
+
       const orderBook = await exchange.fetchL2OrderBook(ticker, order_book_limit)
 
       let result = {
@@ -35,6 +37,7 @@ async function main() {
   fetch_markets(new ccxt.kraken({ 'enableRateLimit': true }), 3000)
   fetch_markets(new ccxt.bitfinex({ 'enableRateLimit': true, rateLimit: 2000 }), 3000)
   fetch_markets(new ccxt.bittrex({ 'enableRateLimit': true }), 3000)
+  fetch_markets(new ccxt.poloniex({ 'enableRateLimit': true }), 3000)
 }
 
 main()
