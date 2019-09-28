@@ -10,20 +10,24 @@ describe('marketDepth', function () {
     const bidsDepth = marketDepth(deepMarket.bids)
     const asksDepth = marketDepth(deepMarket.asks)
 
-    assert.equal(bidsDepth["1_percent_depth"], 6722.47)
-    assert.equal(asksDepth["1_percent_depth"], 220.89)
-    assert.equal(bidsDepth["30_percent_depth"], 79452.21)
-    assert.equal(asksDepth["30_percent_depth"], 35592.670000000006)
+    assert.equal(bidsDepth["1_percent_volume"], 6722.47)
+    assert.equal(bidsDepth["1_percent_depth"], 12.571950399999999)
+    assert.equal(asksDepth["1_percent_volume"], 220.89)
+    assert.equal(asksDepth["1_percent_depth"], 0.42110472)
+    assert.equal(bidsDepth["30_percent_volume"], 79452.21)
+    assert.equal(bidsDepth["30_percent_depth"], 136.70846597999997)
+    assert.equal(asksDepth["30_percent_volume"], 35592.670000000006)
+    assert.equal(asksDepth["30_percent_depth"], 77.99963647999999)
   })
 
   it("computes the market depth for a shallow market", function () {
     const bidsDepth = marketDepth(slice(deepMarket.bids, 0, 10))
     const asksDepth = marketDepth(slice(deepMarket.asks, 0, 10))
 
-    assert.equal(bidsDepth["1_percent_depth"], 6722.47)
-    assert.equal(asksDepth["1_percent_depth"], 220.89)
-    assert.equal(bidsDepth["30_percent_depth"], null)
-    assert.equal(asksDepth["30_percent_depth"], null)
+    assert.equal(bidsDepth["1_percent_volume"], 6722.47)
+    assert.equal(asksDepth["1_percent_volume"], 220.89)
+    assert.equal(bidsDepth["30_percent_volume"], null)
+    assert.equal(asksDepth["30_percent_volume"], null)
   })
 
   it("computes the market depth for an empty market", function () {

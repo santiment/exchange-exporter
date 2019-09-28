@@ -7,6 +7,10 @@ podTemplate(label: 'exchange-exporter', containers: [
     stage('Run Tests') {
       container('docker') {
         def scmVars = checkout scm
+        def awsRegistry = "${env.aws_account_id}.dkr.ecr.eu-central-1.amazonaws.com"
+
+        sh "docker build -t ${awsRegistry}/exchange-exporter:${env.BRANCH_NAME} -t ${awsRegistry}/exchange-exporter:${scmVars.GIT_COMMIT} ."
+        sh "docker run ${awsRegistry}/exchange-exporter:${env.BRANCH_NAME} npm test"
 
         if (env.BRANCH_NAME == "master") {
           withCredentials([
@@ -15,9 +19,7 @@ podTemplate(label: 'exchange-exporter', containers: [
               variable: 'aws_account_id'
             )
           ]) {
-            def awsRegistry = "${env.aws_account_id}.dkr.ecr.eu-central-1.amazonaws.com"
             docker.withRegistry("https://${awsRegistry}", "ecr:eu-central-1:ecr-credentials") {
-              sh "docker build -t ${awsRegistry}/exchange-exporter:${env.BRANCH_NAME} -t ${awsRegistry}/exchange-exporter:${scmVars.GIT_COMMIT} ."
               sh "docker push ${awsRegistry}/exchange-exporter:${env.BRANCH_NAME}"
               sh "docker push ${awsRegistry}/exchange-exporter:${scmVars.GIT_COMMIT}"
             }

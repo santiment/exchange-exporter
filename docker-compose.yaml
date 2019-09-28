@@ -26,6 +26,7 @@ services:
     environment:
       KAFKA_URL: kafka:9092
       ZOOKEEPER_URL: zookeeper:2181
+      KAFKA_TOPIC: exchange_market_depth
     depends_on:
       - kafka
       - zookeeper
@@ -37,6 +38,7 @@ services:
     environment:
       KAFKA_URL: kafka:9092
       ZOOKEEPER_URL: zookeeper:2181
+      KAFKA_TOPIC: exchange_trades
     depends_on:
       - kafka
       - zookeeper
