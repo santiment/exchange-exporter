@@ -1,0 +1,27 @@
+{
+  "name": "exchange-exporter",
+  "version": "1.0.0",
+  "description": "Exporter for exchange market data",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/santiment/exchange-exporter.git"
+  },
+  "author": "Valentin Mihov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/santiment/exchange-exporter/issues"
+  },
+  "homepage": "https://github.com/santiment/exchange-exporter#readme",
+  "dependencies": {
+    "@santiment-network/san-exporter": "0.0.5",
+    "ccxt": "^1.18.1203",
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.0"
+  }
+}

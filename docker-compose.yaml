@@ -1,0 +1,43 @@
+version: "2"
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    logging:
+      driver: none
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    logging:
+      driver: none
+    depends_on:
+      - zookeeper
+  exporter-market-data:
+    build: .
+    volumes:
+      - ./:/app
+    environment:
+      KAFKA_URL: kafka:9092
+      ZOOKEEPER_URL: zookeeper:2181
+    depends_on:
+      - kafka
+      - zookeeper
+    command: ["./wait-for-it.sh", "kafka:9092", "--", "node", "market_depth.js"]
+  exporter-trades:
+    build: .
+    volumes:
+      - ./:/app
+    environment:
+      KAFKA_URL: kafka:9092
+      ZOOKEEPER_URL: zookeeper:2181
+    depends_on:
+      - kafka
+      - zookeeper
+    command: ["./wait-for-it.sh", "kafka:9092", "--", "node", "trades.js"]
