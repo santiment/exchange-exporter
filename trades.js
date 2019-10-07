@@ -8,7 +8,7 @@ function currentTimestamp() {
   return Math.floor(Date.now())
 }
 
-async function fetch_trades(exchange) {
+async function fetch_trades(exchange, preProcessor = null) {
   const lastTimestamp = {}
 
   while (true) {
@@ -22,7 +22,13 @@ async function fetch_trades(exchange) {
       if (trades.length == 0) continue
 
       lastTimestamp[symbol] = trades[trades.length - 1].timestamp
-      const exported_data = trades.map((trade) => ({
+      let exported_data = trades
+
+      if (preProcessor) {
+        exported_data = exported_data.map(preProcessor)
+      }
+
+      exported_data = exported_data.map((trade) => ({
         symbol: trade.symbol,
         side: trade.side,
         amount: trade.amount,
@@ -40,11 +46,19 @@ async function fetch_trades(exchange) {
   }
 }
 
+function assignKrakenIDs(trade) {
+  if (trade.id) return trade
+
+  trade.id = trade.timestamp + ''
+
+  return trade
+}
+
 async function main() {
   await exporter.connect()
 
   fetch_trades(new ccxt.binance({ 'enableRateLimit': true }))
-  fetch_trades(new ccxt.kraken({ 'enableRateLimit': true }))
+  fetch_trades(new ccxt.kraken({ 'enableRateLimit': true }), assignKrakenIDs)
   fetch_trades(new ccxt.bitfinex2({ 'enableRateLimit': true, 'rateLimit': 5000 }))
   fetch_trades(new ccxt.bittrex({ 'enableRateLimit': true }))
   fetch_trades(new ccxt.poloniex({ 'enableRateLimit': true }))

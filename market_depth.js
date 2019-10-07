@@ -5,15 +5,13 @@ const { marketDepth } = require('./utils')
 const merge = require('lodash/merge')
 const exporter = new Exporter(`${package.name}-market-depth`)
 
-async function fetch_markets(exchange, order_book_limit = undefined) {
+async function fetch_markets(exchange, order_book_limit) {
   while (true) {
     const currentTickers = await exchange.fetchTickers()
     console.log(`${exchange.name} - getting order books for ${exchange.symbols.length} markets`)
 
     for (ticker in currentTickers) {
       if (!currentTickers[ticker]) continue
-
-      const orderBook = await exchange.fetchL2OrderBook(ticker, order_book_limit)
 
       let result = {
         symbol: ticker,
@@ -22,8 +20,11 @@ async function fetch_markets(exchange, order_book_limit = undefined) {
         timestamp: currentTickers[ticker].timestamp,
         source: exchange.name
       }
-      result = merge(result, marketDepth(orderBook.bids, [1, 2, 3, 5, 10, 20, 30], "bids_"))
-      result = merge(result, marketDepth(orderBook.asks, [1, 2, 3, 5, 10, 20, 30], "asks_"))
+
+      const orderBook = await exchange.fetchL2OrderBook(ticker, order_book_limit)
+
+      result = merge(result, marketDepth(orderBook.bids, [0.25, 0.5, 1, 2, 5, 10, 20, 30], "bids_"))
+      result = merge(result, marketDepth(orderBook.asks, [0.25, 0.5, 1, 2, 5, 10, 20, 30], "asks_"))
 
       exporter.sendData(result)
     }
