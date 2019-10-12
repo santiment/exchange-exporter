@@ -26,15 +26,17 @@ describe('marketDepth', function () {
 
     assert.equal(bidsDepth["1_percent_volume"], 6722.47)
     assert.equal(asksDepth["1_percent_volume"], 220.89)
-    assert.equal(bidsDepth["30_percent_volume"], null)
-    assert.equal(asksDepth["30_percent_volume"], null)
+    assert.ok("30_percent_volume" in bidsDepth)
+    assert.ok("30_percent_volume" in asksDepth)
   })
 
   it("computes the market depth for an empty market", function () {
     const bidsDepth = marketDepth([])
     const asksDepth = marketDepth([])
 
-    assert.deepEqual(bidsDepth, {})
-    assert.deepEqual(asksDepth, {})
+    assert.ok("1_percent_volume" in bidsDepth)
+    assert.ok("1_percent_volume" in asksDepth)
+    assert.ok("30_percent_volume" in bidsDepth)
+    assert.ok("30_percent_volume" in asksDepth)
   })
 })

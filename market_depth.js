@@ -23,8 +23,8 @@ async function fetch_markets(exchange, order_book_limit) {
 
       const orderBook = await exchange.fetchL2OrderBook(ticker, order_book_limit)
 
-      result = merge(result, marketDepth(orderBook.bids, [0.25, 0.5, 1, 2, 5, 10, 20, 30], "bids_"))
-      result = merge(result, marketDepth(orderBook.asks, [0.25, 0.5, 1, 2, 5, 10, 20, 30], "asks_"))
+      result = merge(result, marketDepth(orderBook.bids, [0.25, 0.5, 0.75, 1, 2, 5, 10, 20, 30], "bids_"))
+      result = merge(result, marketDepth(orderBook.asks, [0.25, 0.5, 0.75, 1, 2, 5, 10, 20, 30], "asks_"))
 
       exporter.sendData(result)
     }
@@ -34,9 +34,9 @@ async function fetch_markets(exchange, order_book_limit) {
 async function main() {
   await exporter.connect()
 
-  fetch_markets(new ccxt.binance({ 'enableRateLimit': true }), 5000)
+  fetch_markets(new ccxt.binance({ 'enableRateLimit': true, 'rateLimit': 3000 }), 5000)
   fetch_markets(new ccxt.kraken({ 'enableRateLimit': true }), 3000)
-  fetch_markets(new ccxt.bitfinex({ 'enableRateLimit': true, rateLimit: 2000 }), 3000)
+  fetch_markets(new ccxt.bitfinex({ 'enableRateLimit': true, 'rateLimit': 2000 }), 3000)
   fetch_markets(new ccxt.bittrex({ 'enableRateLimit': true }), 3000)
   fetch_markets(new ccxt.poloniex({ 'enableRateLimit': true }), 3000)
 }

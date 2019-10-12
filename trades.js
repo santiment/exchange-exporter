@@ -57,7 +57,7 @@ function assignKrakenIDs(trade) {
 async function main() {
   await exporter.connect()
 
-  fetch_trades(new ccxt.binance({ 'enableRateLimit': true }))
+  fetch_trades(new ccxt.binance({ 'enableRateLimit': true, 'rateLimit': 3000 }))
   fetch_trades(new ccxt.kraken({ 'enableRateLimit': true }), assignKrakenIDs)
   fetch_trades(new ccxt.bitfinex2({ 'enableRateLimit': true, 'rateLimit': 5000 }))
   fetch_trades(new ccxt.bittrex({ 'enableRateLimit': true }))
