@@ -1,4 +1,4 @@
-function marketDepth(orderBook, steps = [1, 5, 10, 20, 30], prefix = "") {
+function marketDepth(orderBook, steps = [0.25, 1, 5, 10, 20, 30], prefix = "") {
   const result = {}
   let currentStep = 0
   let currentVolume = 0
@@ -9,8 +9,8 @@ function marketDepth(orderBook, steps = [1, 5, 10, 20, 30], prefix = "") {
     const currentSlippage = Math.abs(1 - orderBook[i][0] / surfacePrice)
 
     if (currentSlippage >= steps[currentStep] / 100) {
-      result[`${prefix}${steps[currentStep]}_percent_volume`] = currentVolume
-      result[`${prefix}${steps[currentStep]}_percent_depth`] = currentDepth
+      result[`${prefix}${steps[currentStep]}_percent_volume`.replace(".", "_")] = currentVolume
+      result[`${prefix}${steps[currentStep]}_percent_depth`.replace(".", "_")] = currentDepth
       currentStep += 1
     }
 
@@ -19,8 +19,8 @@ function marketDepth(orderBook, steps = [1, 5, 10, 20, 30], prefix = "") {
   }
 
   while (currentStep < steps.length) {
-    result[`${prefix}${steps[currentStep]}_percent_depth`] = null
-    result[`${prefix}${steps[currentStep]}_percent_volume`] = null
+    result[`${prefix}${steps[currentStep]}_percent_depth`.replace(".", "_")] = null
+    result[`${prefix}${steps[currentStep]}_percent_volume`.replace(".", "_")] = null
     currentStep += 1
   }
 
