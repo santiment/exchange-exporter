@@ -1,7 +1,6 @@
 const package = require('./package.json')
-const url = require('url')
-const { send } = require('micro')
 const ccxt = require('ccxt')
+const { healthcheckServer } = require('./utils')
 const { Exporter } = require('@santiment-network/san-exporter')
 
 const exporter = new Exporter(`${package.name}-trades`)
@@ -68,26 +67,4 @@ async function main() {
 
 main()
 
-const healthcheckKafka = () => {
-  return new Promise((resolve, reject) => {
-    if (exporter.producer.isConnected()) {
-      resolve()
-    } else {
-      reject("Kafka client is not connected to any brokers")
-    }
-  })
-}
-
-module.exports = async (request, response) => {
-  const req = url.parse(request.url, true);
-
-  switch (req.pathname) {
-    case '/healthcheck':
-      return healthcheckKafka()
-        .then(() => send(response, 200, "ok"))
-        .catch((err) => send(response, 500, `Connection to kafka failed: ${err}`))
-
-    default:
-      return send(response, 404, 'Not found');
-  }
-}
+module.exports = healthcheckServer(exporter)
