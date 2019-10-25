@@ -1,7 +1,7 @@
 const package = require('./package.json')
 const ccxt = require('ccxt')
 const { Exporter } = require('@santiment-network/san-exporter')
-const { marketDepth } = require('./utils')
+const { marketDepth, healthcheckServer } = require('./utils')
 const merge = require('lodash/merge')
 const exporter = new Exporter(`${package.name}-market-depth`)
 
@@ -42,3 +42,5 @@ async function main() {
 }
 
 main()
+
+module.exports = healthcheckServer(exporter)

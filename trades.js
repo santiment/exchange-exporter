@@ -1,5 +1,6 @@
 const package = require('./package.json')
 const ccxt = require('ccxt')
+const { healthcheckServer } = require('./utils')
 const { Exporter } = require('@santiment-network/san-exporter')
 
 const exporter = new Exporter(`${package.name}-trades`)
@@ -65,3 +66,5 @@ async function main() {
 }
 
 main()
+
+module.exports = healthcheckServer(exporter)

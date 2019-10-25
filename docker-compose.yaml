@@ -30,7 +30,14 @@ services:
     depends_on:
       - kafka
       - zookeeper
-    command: ["./wait-for-it.sh", "kafka:9092", "--", "node", "market_depth.js"]
+    command:
+      [
+        "./wait-for-it.sh",
+        "kafka:9092",
+        "--",
+        "./node_modules/.bin/micro",
+        "market_depth.js",
+      ]
   exporter-trades:
     build: .
     volumes:
@@ -42,4 +49,11 @@ services:
     depends_on:
       - kafka
       - zookeeper
-    command: ["./wait-for-it.sh", "kafka:9092", "--", "node", "trades.js"]
+    command:
+      [
+        "./wait-for-it.sh",
+        "kafka:9092",
+        "--",
+        "./node_modules/.bin/micro",
+        "trades.js",
+      ]

@@ -1,3 +1,6 @@
+const url = require('url')
+const { send } = require('micro')
+
 function marketDepth(orderBook, steps = [0.25, 1, 5, 10, 20, 30], prefix = "") {
   const result = {}
   let currentStep = 0
@@ -27,4 +30,30 @@ function marketDepth(orderBook, steps = [0.25, 1, 5, 10, 20, 30], prefix = "") {
   return result
 }
 
+const healthcheckKafka = (exporter) => {
+  return new Promise((resolve, reject) => {
+    if (exporter.producer.isConnected()) {
+      resolve()
+    } else {
+      reject("Kafka client is not connected to any brokers")
+    }
+  })
+}
+
 exports.marketDepth = marketDepth
+
+exports.healthcheckServer = (exporter) => {
+  return async (request, response) => {
+    const req = url.parse(request.url, true);
+
+    switch (req.pathname) {
+      case '/healthcheck':
+        return healthcheckKafka(exporter)
+          .then(() => send(response, 200, "ok"))
+          .catch((err) => send(response, 500, `Connection to kafka failed: ${err}`))
+
+      default:
+        return send(response, 404, 'Not found');
+    }
+  }
+}
