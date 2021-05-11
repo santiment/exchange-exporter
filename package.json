@@ -19,7 +19,7 @@
   "dependencies": {
     "@santiment-network/san-exporter": "0.0.5",
     "ccxt": "^1.26.45",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "micro": "^9.3.4"
   },
   "devDependencies": {
